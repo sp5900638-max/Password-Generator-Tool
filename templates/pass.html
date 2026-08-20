@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Password Generator</title>
+    <style>
+        /* Animated Gradient Background */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #0b0c10, #1f2833, #0f3460, #e94560);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 3D Floating Glass Card */
+        .container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), 
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .container:hover {
+            transform: translateY(-12px) rotateX(3deg) rotateY(-3deg);
+            box-shadow: 0 40px 70px rgba(0, 0, 0, 0.7), 
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        h2 { 
+            text-align: center; 
+            margin-top: 0; 
+            margin-bottom: 30px;
+            font-weight: 600; 
+            letter-spacing: 3px; 
+            text-transform: uppercase;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            background: linear-gradient(to right, #fff, #e94560);
+            -webkit-background-clip: text;
+            background-clip: text; /* Added standard property */
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Form Layout */
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+
+        .form-group-text { flex-direction: column; align-items: flex-start; }
+        
+        /* 3D Input Field */
+        input[type="text"], input[type="password"], input[type="number"] {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            font-size: 1em;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            letter-spacing: 1px;
+        }
+
+        input::placeholder { color: rgba(255, 255, 255, 0.4); }
+
+        input[type="text"]:focus, input[type="number"]:focus { 
+            outline: none; 
+            background: rgba(0, 0, 0, 0.5); 
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.6), 0 0 15px rgba(233, 69, 96, 0.6); 
+            transform: translateY(-2px);
+        }
+
+        /* Custom Interactive Checkboxes */
+        input[type="checkbox"] {
+            appearance: none;
+            width: 54px;
+            height: 28px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.5);
+            transition: background 0.3s ease;
+        }
+
+        input[type="checkbox"]::before {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50px;
+            top: 2px;
+            left: 2px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        input[type="checkbox"]:checked { background: #e94560; }
+        input[type="checkbox"]:checked::before { transform: translateX(26px); }
+
+        /* 3D Buttons */
+        .button-group { display: flex; gap: 15px; margin-top: 35px; }
+        
+        .btn {
+            flex: 1;
+            padding: 14px;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.15s ease;
+            text-decoration: none;
+            position: relative;
+            font-size: 0.9em;
+        }
+
+        .btn-submit {
+            background: #0f3460;
+            color: white;
+            box-shadow: 0 6px 0 #081d36, 0 12px 20px rgba(0,0,0,0.5);
+        }
+
+        .btn-submit:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 #081d36, 0 4px 6px rgba(0,0,0,0.4);
+        }
+
+        .btn-clear {
+            background: #2a2a35;
+            color: white;
+            box-shadow: 0 6px 0 #15151a, 0 12px 20px rgba(0,0,0,0.5);
+        }
+
+        .btn-clear:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 #15151a, 0 4px 6px rgba(0,0,0,0.4);
+        }
+
+        /* Results Display */
+        .result-box {
+            margin-top: 35px;
+            padding: 25px;
+            background: rgba(233, 69, 96, 0.15);
+            border: 1px solid rgba(233, 69, 96, 0.4);
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .result-password { 
+            font-size: 1.8em; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(233, 69, 96, 0.8);
+            margin: 15px 0; 
+            word-break: break-all; 
+            letter-spacing: 2px;
+        }
+
+        .strength-indicator { margin-bottom: 20px; font-size: 0.95em; color: #ddd; }
+        .strength-indicator strong { color: #e94560; text-transform: uppercase; letter-spacing: 1px; }
+
+        .error { color: #ff6b6b; font-size: 0.85em; margin-top: 8px; font-weight: 500; }
+
+        /* Copy Button specific */
+        .btn-copy {
+            background: #e94560;
+            color: white;
+            box-shadow: 0 6px 0 #b32a45, 0 12px 20px rgba(0,0,0,0.4);
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-copy:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 #b32a45, 0 4px 6px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>PassGen Pro</h2>
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group form-group-text">
+                {{ form.password.label }}
+                {{ form.password(placeholder="Length (e.g. 12)") }}
+                {% for error in form.password.errors %}
+                    <div class="error">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                {{ form.uppercase.label }}
+                {{ form.uppercase() }}
+            </div>
+
+            <div class="form-group">
+                {{ form.lowercase.label }}
+                {{ form.lowercase() }}
+            </div>
+
+            <div class="form-group">
+                {{ form.numbers.label }}
+                {{ form.numbers() }}
+            </div>
+
+            <div class="form-group">
+                {{ form.symbols.label }}
+                {{ form.symbols() }}
+            </div>
+
+            <div class="button-group">
+                {{ form.submit(class="btn btn-submit") }}
+                <a class="btn btn-clear" href="{{ url_for('password') }}">Clear</a>
+            </div>
+            
+            {% if new %}
+            <div class="result-box">
+                <p style="margin: 0; color: #aaa; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px;">Your Password</p>
+                
+                <div class="result-password">{{ new }}</div>
+                
+                <p class="strength-indicator">Strength: <strong>{{ strg }}</strong></p>
+                
+                <button type="button" class="btn btn-copy" onclick="copyPassword(this)">
+                    Copy Password
+                </button>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+<script>
+function copyPassword(buttonElement) {
+    const password = document.querySelector(".result-password").innerText;
+    
+    navigator.clipboard.writeText(password).then(() => {
+        // Store original styles
+        const originalText = buttonElement.innerText;
+        const originalBg = buttonElement.style.background;
+        const originalShadow = buttonElement.style.boxShadow;
+
+        // Apply Success state
+        buttonElement.innerText = "Copied! ✨";
+        buttonElement.style.background = "#4caf50";
+        buttonElement.style.boxShadow = "0 6px 0 #2e7d32, 0 12px 20px rgba(0,0,0,0.4)";
+
+        // Revert back after 2 seconds
+        setTimeout(() => {
+            buttonElement.innerText = originalText;
+            buttonElement.style.background = originalBg;
+            buttonElement.style.boxShadow = originalShadow;
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+    });
+}
+</script>
+</body>
+</html>
